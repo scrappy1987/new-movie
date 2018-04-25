@@ -37,9 +37,13 @@ public class MovieDBRepository implements MovieRepository {
 	}
 
 	public String getMovie(Long id) {
-		LOGGER.info("In MovieDBRepository getMovie");
 		Movie movieInDB = findMovie(id);
-		return util.getJSONForObject(movieInDB);
+		if (movieInDB != null) {
+			return util.getJSONForObject(movieInDB);
+		}
+		else {
+			return "{\"message\":\"movie not found\"}";
+		}
 	}
 
 	@Transactional(REQUIRED)
@@ -56,8 +60,12 @@ public class MovieDBRepository implements MovieRepository {
 		Movie movieInDB = findMovie(id);
 		if (movieInDB != null) {
 			manager.remove(movieInDB);
+			return "{\"message\": \"movie sucessfully deleted\"}";
 		}
-		return "{\"message\": \"movie sucessfully deleted\"}";
+		else {
+			return "{\"message\": \"movie not found\"}";
+		}
+		
 	}
 
 	private Movie findMovie(Long id) {
